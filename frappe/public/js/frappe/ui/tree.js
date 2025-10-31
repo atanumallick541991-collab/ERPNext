@@ -252,15 +252,20 @@ frappe.ui.Tree = class {
 	}
 
 	get_node_label(node) {
-		if (this.get_label) {
-			return this.get_label(node);
-		}
-		if (node.title && node.title != node.label) {
-			return __(node.title) + ` <span class='text-muted'>(${node.label})</span>`;
-		} else {
-			return __(node.title || node.label);
-		}
-	}
+    let main_label;
+    if (this.get_label) {
+        main_label = this.get_label(node);
+    } else if (node.title && node.title != node.label) {
+        main_label = __(node.title) + ` <span class='text-muted'>(${node.label})</span>`;
+    } else {
+        main_label = __(node.title || node.label);
+    }
+    // Append description if it exists
+    if (node.data && node.data.description) {
+        main_label += ` <span class='text-info'>— ${__(node.data.description)}</span>`;
+    }
+    return main_label;
+}
 
 	make_icon_and_label(node) {
 		let icon_html = "";
